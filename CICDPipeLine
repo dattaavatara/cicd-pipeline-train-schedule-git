@@ -24,7 +24,9 @@ Syntax: globally
 Step3: Setting up Private Key Access using ssh-keygen
 
 Syntax: to create private Key
-        ssh-keygen-t rsa -b 4098
+        ssh-keygen -t rsa -b 4098
+        note: here type is rsa and -b is the size
+        
 Note: Above command will prompt you several things, these can left as default,though its good practice to enter a passpharse.
       If you use passpharse, make sure you remember what it is.
 
