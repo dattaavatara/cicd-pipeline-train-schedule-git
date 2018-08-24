@@ -1,0 +1,208 @@
+###Lecture1: SOURCE CODE MANAGEMENT###
+
+CONNECTING TO THE SERVER ON GOOGLE CLOUD USING SSH
+Syntax: ssh -i [PATH_TO_PRIVATE_KEY] [USERNAME]@[EXTERNAL_IP_ADDRESS] 
+        ssh -i ssh -i gckeyfolder/devops ec2user@35.196.242.87  
+
+We will be using GIT, and specifically GitHub, to manage the source code for the Train Schedule APP
+
+Step1: will be running the project on CentOS7
+
+- Install Git on the OS using following command
+
+Syntax:note if you root just use yum
+        sudo yum install git -y 
+
+Step2: Configure your Name and Email
+    user name : dattaavatara
+    password  : dattaavatara
+
+Syntax: globally
+        git config --global user.name "dattaavatara"
+        git config --global user.email akmandava@yahoo.co.uk
+
+Step3: Setting up Private Key Access using ssh-keygen
+
+Syntax: to create private Key
+        ssh-keygen-t rsa -b 4098
+Note: Above command will prompt you several things, these can left as default,though its good practice to enter a passpharse.
+      If you use passpharse, make sure you remember what it is.
+
+      After generating the keppair, copy the contents of
+        ~/.ssh/id_sra.pub
+Note: After above step on Github.com, click your profile image at the top right,then click "settings""SSH and GPG Keys" 
+        click "new ssh key" enter name and paste the contents of id_rsa.pub into the key fiels,then subbmit the form.
+Step4: Creating GitHub FORKS its nothing but copying the existing file from linux academy for our project.
+        url "https://github.com/linuxacademy/cicd-pipeline-train-schedule-git"
+        FORKS are a useful tool for working with Github projects. FORKS provide a way of any user to create their own
+        personal copy of GitHub repository which you can fully control without interfering with other users.
+        It is mainly used to control open source projects. for our train shedule project.
+
+Step5: git clone
+        If your working with source code that allready exists in the remote repository, the first thing to do is get a copy of the repository
+        so that you can work with the files locally.
+
+Syntax: git clone<repository url>
+        For the existing code
+        Above commanddoes two things:
+        -Downloads a local copy of the repository, including the history of all changes
+        -Makes a local copy of the latest version of all the files known as the "working tree"
+        
+        git clone https://github.com/dattaavatara/cicd-pipeline-train-schedule-git.git
+
+If the code doesn't exist in a remote repository, you can initialize a new repository locally using:
+
+ Syntax: git init 
+
+Step6: Git Status
+        Will tell you the status of the local version of the repository
+
+Syntax: git status
+        [ec2user@workstation01 cicd-pipeline-train-schedule-git]$ git status
+# On branch master
+nothing to commit, working directory clean
+
+Step7: git add
+        The dd command stages changed files for the next commit. This allows you to control which files are committed and which are not.
+
+Syntax: git add<file>
+        There are 3 steps involved
+            -   git add. or git add -A 
+        Above command you can add all the file or you can specify individual file names
+
+            -   git commit -m "<message describing the changes>"
+        A few notes on commit:
+            . Commit only adds the changes to your local copy of the repository. It does not push them to any remote repository, such as GitHub
+            . Commit will only commit the changes that were staged using "git add"
+
+            - git push
+            . Git Push pushes the changes that have been made to your local repository to a remote repository,such as GitHub.
+            . Until you push your changes, they are only stored locally on your system:
+
+            - git push -u<remotename,usually origin><branch name>
+            .By default,push will push the changes to a remote repository associated with the current local branch.If you cloned the branch
+            from an existing remote repository, this relationship is already set up for you,and you can simply use git push.
+            If not, you may need to specify which remote repository and which remote branch you want to push to use:
+
+            - git push -u<remotename,usually origin><branch name>           
+step8: Changing the existing file and see how it works in Git
+Syntax: vim views/index.jade
+        - git status
+
+        # On branch master
+    # Changes not staged for commit:
+    #   (use "git add <file>..." to update what will be committed)
+    #   (use "git checkout -- <file>..." to discard changes in working directory)
+    #
+    #	modified:   views/index.jade
+    #
+    no changes added to commit (use "git add" and/or "git commit -a")
+
+        - git add .    <=== note . dot denotes add all the changes
+
+        # On branch master
+    # Changes to be committed:
+    #   (use "git reset HEAD <file>..." to unstage)
+    #
+    #	modified:   views/index.jade
+    #
+     
+        - git commit -m "change header text"
+     
+        [master 0face06] header benn modified
+        1 file changed, 2 insertions(+), 2 deletions(-)
+
+        - git status
+
+        # On branch master
+    # Your branch is ahead of 'origin/master' by 1 commit.
+    #   (use "git push" to publish your local commits)
+    #
+    nothing to commit, working directory clean    
+
+        - git push
+        
+        [ec2user@workstation01 cicd-pipeline-train-schedule-git]$ git push
+    Username for 'https://github.com': dattaavatara
+    Password for 'https://dattaavatara@github.com': 
+    Counting objects: 7, done.
+    Compressing objects: 100% (4/4), done.
+    Writing objects: 100% (4/4), 418 bytes | 0 bytes/s, done.
+    Total 4 (delta 2), reused 0 (delta 0)
+    remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+    To https://github.com/dattaavatara/cicd-pipeline-train-schedule-git.git
+       2660b73..0face06  HEAD -> master
+
+        - git status
+
+        # On branch master
+        nothing to commit, working directory clean       
+
+Step9: BRANCHES AND TAGS
+
+    git branches     
+    Syntax: git branch
+    [ec2user@workstation01 cicd-pipeline-train-schedule-git]$ git branch
+    * master
+
+        . Branches are used to maintain multiple versions of the code with different changes simultaneously.
+        . Many teams uses branches as part of daily workflow.
+        . Branches can also be used to interact with a CI/CD pipeline. For example, some teams maintain a "production"branch,and 
+          merging changes into this branch initiates automated processes involved with developing to production.
+        . By default, a git repository starts with one branch called "master".
+
+    git checkout 
+        . git checkout checks out an existing branch.This means that it puts the contents of the branch into your working tree and your working copy of the source code files.
+        . When you commit,whichever branch you have checked out will be the branch that the commit is added to.
+
+    Syntax: git checkout<branch>
+
+    Creating new branch:
+
+        .  You can create a new branch and check it out immediately with the -b flag:
+    Syntax: git checkout -b <new branch name>
+
+    [ec2user@workstation01 cicd-pipeline-train-schedule-git]$ git checkout -b newBranch
+    Switched to a new branch 'newBranch'
+    [ec2user@workstation01 cicd-pipeline-train-schedule-git]$ git branch
+    master
+    * newBranch
+        ABOVE IT SAYS WE ARE CURRENTLY ON newBranch
+
+
+
+    git tag
+        . Tags in git are simply pointers to a particular commit. They can be used to provide a name that can be used to reference that commit
+          in the future
+
+        . one use case for tags is to tag source code commits with the version of the software that they represent,so if a particular version gets
+          as version 1.0.0, it could be tagged as "v1.0.0" in order to indicate that.
+
+    Syntax: git tag <tag name>
+            git tag myTag
+
+            [ec2user@workstation01 cicd-pipeline-train-schedule-git]$ git tag myTag
+            [ec2user@workstation01 cicd-pipeline-train-schedule-git]$ git tag
+            myTag
+
+    PULL Requests
+        .   Pull requests are not actually a feature of the git software itself.. however,they are useful tool offered by many git remote 
+            server inplementations, such as Github.
+        .   Usually,teams work using multiple branches to merge all of their changes.At some point,these branches need to be merged together(preferbely as often as possible).
+        .   Merges can be handled locally using git,but another way to do this is through pull requests.
+        .   A pull request is a request made by a developer to merge their changes intoanother branch(usually a shared mainline).
+            it gives other team members a chance to review the changes before performing the merge.     
+
+
+
+
+                       
+
+
+
+
+
+
+
+
+
